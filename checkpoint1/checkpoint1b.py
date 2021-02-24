@@ -17,20 +17,50 @@ Once you are finished with this program, you should run `python preprocess.py` f
 This should load the data, perform preprocessing, and save the output to the data folder.
 
 """
+import statistics as s
+import pandas as pd
+import numpy as np
+import re
 
+# Working
 def remove_percents(df, col):
+    df[col] = df[col].str.replace("%","")
+    df[col] = pd.to_numeric(df[col])
     return df
 
+# Working
 def fill_zero_iron(df):
+    df['Iron (% DV)'].fillna(0, inplace = True)
     return df
     
+# Working
+# Try replacing 'Varies' with null, then calculate mean, then replace nulls with mean
 def fix_caffeine(df):
+    df['Caffeine (mg)'] = df['Caffeine (mg)'].replace('varies', np.nan)
+    df['Caffeine (mg)'] = df['Caffeine (mg)'].replace('Varies', np.nan)
+    caffeine_mean = pd.to_numeric(df['Caffeine (mg)'], errors = 'coerce').mean(skipna = True)
+    df['Caffeine (mg)'].fillna(caffeine_mean, inplace = True)
     return df
 
+# Working
+# must remove units in parentheses
 def standardize_names(df):
+    for i in df.columns:
+        i.lower()
+        new_col = re.sub(r'\(.*\)', '', i)
+        df = df.rename(columns={i: new_col})
     return df
 
+# Note: HOW DO YOU DO THIS??
 def fix_strings(df, col):
+    #regex = re.compile('[,\.!?]')
+    #df[col] = df[col].apply(re.sub(regex, df[col]))
+    #df[col].lower()
+    #df[col] = df[col].lower()
+
+    #for i in df[col]:
+        #df[col] = re.sub(regex, df[col].i)
+        #df[col].lower()
     return df
 
 
@@ -66,7 +96,8 @@ def main():
     
     # now that the data is all clean, save your output to the `data` folder as 'starbucks_clean.csv'
     # you will use this file in checkpoint 2
-    
+    path = '\\mnt\\d\\UMich\\MDST\\mdst_tutorials\\data\\starbucks_clean.csv'
+    df.to_csv('../data/starbucks_clean.csv')
     
 
 if __name__ == "__main__":

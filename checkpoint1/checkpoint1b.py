@@ -51,7 +51,7 @@ def standardize_names(df):
         df = df.rename(columns={i: new_col})
     return df
 
-# Note: HOW DO YOU DO THIS??
+# Note: HOW DO YOU DO THIS
 def fix_strings(df, col):
     #regex = re.compile('[,\.!?]')
     #df[col] = df[col].apply(re.sub(regex, df[col]))
